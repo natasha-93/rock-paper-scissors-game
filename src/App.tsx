@@ -3,6 +3,10 @@ import { Theme, makeStyles, createStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Paper from "@material-ui/core/Paper";
+import Grid from "@material-ui/core/Grid";
+import Divider from "@material-ui/core/Divider";
 import { ReactComponent as RockIcon } from "./img/hands-rock.svg";
 import { ReactComponent as PaperIcon } from "./img/hands-paper.svg";
 import { ReactComponent as ScissorsIcon } from "./img/hands-scissors.svg";
@@ -91,6 +95,12 @@ const useStyles = makeStyles((theme: Theme) =>
     icon: {
       fontSize: `${theme.spacing(8)}px`,
     },
+
+    paper: {
+      padding: theme.spacing(1),
+      textAlign: "center",
+      color: theme.palette.text.primary,
+    },
   })
 );
 
@@ -105,17 +115,18 @@ function App() {
 
   return (
     <div style={{ margin: "auto" }}>
-      <h2>Rock, Paper, Scissors</h2>
-      <Button
-        disabled={!isOver}
-        onClick={() => dispatch({ type: "RESET_GAME" })}
-      >
-        Restart Game
-      </Button>
-      <div>
-        <p>Player 1: {state.playerScore}</p>
-        <p>Computer: {state.computerScore}</p>
-      </div>
+      <h1>Rock, Paper, Scissors</h1>
+      <Grid container spacing={1}>
+        <Grid item xs={6}>
+          <Paper className={classes.paper}>Player 1: {state.playerScore}</Paper>
+        </Grid>
+
+        <Grid item xs={6}>
+          <Paper className={classes.paper}>
+            Computer: {state.computerScore}
+          </Paper>
+        </Grid>
+      </Grid>
       <h3>Make Your Selection</h3>
       <div>
         {choices.map((choice) => {
@@ -133,23 +144,25 @@ function App() {
           );
         })}
 
-        <Dialog open={isOver}>
-          Game Over
-          {winner === "DRAW" ? (
-            <div>It's a draw!</div>
-          ) : (
-            <div>
-              {winner} wins! Computer chose {state.computerChoice}
-            </div>
-          )}
-          <IconButton
-            onClick={(e) => {
-              dispatch({ type: "RESET_GAME" });
-            }}
-          >
-            Reset Game
-          </IconButton>
-        </Dialog>
+        {isOver && (
+          <Dialog open={isOver}>
+            <DialogTitle>Game Over</DialogTitle>
+            {winner === "DRAW" ? (
+              <DialogTitle>It's a draw!</DialogTitle>
+            ) : (
+              <DialogTitle>
+                {winner} wins! Computer chose {state.computerChoice}
+              </DialogTitle>
+            )}
+            <IconButton
+              onClick={(e) => {
+                dispatch({ type: "RESET_GAME" });
+              }}
+            >
+              Play Again
+            </IconButton>
+          </Dialog>
+        )}
       </div>
     </div>
   );
